@@ -1,0 +1,153 @@
+---
+title: "lab2"
+author: "Sydney Thompson"
+date: "2/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Reading the Data
+
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv") 
+str(choco)
+```
+
+# Searching for the Best Chocolates
+
+1. How are the ratings distributed? Create both a histogram and a boxplot and describe them. Don’t forget to mention outliers, if there are any.
+
+```{r}
+plot(choco$Rating)
+boxplot(choco$Rating)
+```
+
+ The ratings are distributed to each reference number (REF) which correlates with each chocolate. There are also 4 outliers shown in the scatter plot and box plot which have a rating below approximately 2. The remaining box plot has an average rating of about 3.25 and ranges from about 2.25 to 4.0. 
+ 
+2. How does the number of ratings depend on the location of the company? Draw a bar chart of the number of reports.
+
+```{r}
+reports <- table(choco$Location)
+str(reports)
+best5 <-head(sort(reports,decreasing=TRUE),n=5)
+barplot(best5)
+```
+ 
+ The top 5 countries with the most number of ratings for chocolate include the USA, France, Canada, UK, and Italy. The USA has about 4 times the amount of ratings due to its significantly higher population in comparison to the other 4 countries. 
+
+3. Do ratings depend on the cacao percentage of a chocolate bar? Create both numerical and graphical summaries, and explain. [Hint: Think about why the scatterplot is not a very good choice for visualization here.]
+
+```{r}
+cor(choco$Rating, choco$Cocoa_Percent)
+boxplot(choco$Rating, choco$Cocoa_Percent)
+```
+
+Since the correlation between the two variables, Rating and Cocoa Percentage, are a negative value they have no correlation. Therefore, these variables do not depend on one another as they are far from a positive numerical value of 1 which would indicate correlation. The box plot also visually shows 
+
+4. How do different bean origins compare in terms of the flavor of chocolates? Are beans from some places better than the other? Create both numerical and graphical summaries, and explain.
+
+```{r}
+origins <- table(choco$Bean_Origin)
+str(origins)
+origins5 <- head(sort(origins,decreasing=TRUE),n=5)
+names(origins5)
+barplot(origins5)
+```
+
+```{r}
+venezuela <- choco[choco$Bean_Origin == 'Venezuela',]
+peru <- choco[choco$Bean_Origin == 'Peru',]
+ecuador <- choco[choco$Bean_Origin == 'Ecuador',]
+dominican <- choco[choco$Bean_Origin == 'Dominican Republic',]
+madagascar <- choco[choco$Bean_Origin == 'Madagascar',]
+vrating <- venezuela$Rating
+prating <- peru$Rating
+erating <- ecuador$Rating
+drating <- dominican$Rating
+mrating <- madagascar$Rating
+vave <- mean(vrating)
+pave <- mean(prating)
+eave <- mean(erating)
+dave <- mean(drating)
+mave <- mean(mrating)
+averating <- c(vave, pave, eave, dave, mave)
+names(averating) <- c('Venezuela','Peru','Ecuador','Dominican Republic','Madagascar')
+barplot(averating)
+averating
+```
+
+ From the first graphical bar plot you can see that the top 5 bean origins are from Venezuela, Peru, Ecuador, Dominican Republic and Madagascar. From the second graphical and numerical summaries one can see that from the top 5 bean origin countries all 5 countries have relatively close chocolate rating averages. Therefore, bean origins do not have an affect in terms of the flavor of chocolates. 
+
+5. Brainstorm two analyses you would like to perform (with your teammates). Describe in plain language what comparisons are you making. Create suitable numerical and graphical summaries for your analyses. Describe the results.
+
+Our first analysis will be to determine if the companies have any affect on rating. Our plan is to first extract the top 5 companies that have the most amount of entries in the data set. Then we will extract the rating data of these 5 companies from the data set. After that, we will create a bar graph and print the average ratings.
+
+
+```{r}
+companies <- table(choco$Company)
+str(companies)
+companies5 <- head(sort(companies,decreasing=TRUE),n=5)
+names(companies5)
+barplot(companies5)
+```
+
+```{r}
+soma <- choco[choco$Company == 'Soma',]
+arete <- choco[choco$Company == 'Arete',]
+fresco <- choco[choco$Company == 'Fresco',]
+bonnat <- choco[choco$Company == 'Bonnat',]
+pralus <- choco[choco$Company == 'Pralus',]
+srating <- soma$Rating
+arating <- arete$Rating
+frating <- fresco$Rating
+brating <- bonnat$Rating
+prating <- pralus$Rating
+save <- mean(srating)
+aave <- mean(arating)
+fave <- mean(frating)
+bave <- mean(brating)
+pave <- mean(prating)
+averating1 <- c(save, aave, fave, bave, pave)
+names(averating1) <- c('Soma','Arete','Fresco','Bonnat','Pralus')
+barplot(averating1)
+averating1
+```
+
+The top 5 chocolate companies shown in the graphical bar plot include Soma, Arete, Fresco, Bonnat and Pralus. We can also see from the bar plot that Soma is almost twice the size of the remaining top 4 companies for chocolate. Continuing on with the analysis, we can see from the second bar plot and numerical list that the average ratings for the top 5 companies are quite similar, but there is a slight range with Soma at 3.59 to Pralus at a 3.17. Thus being said, Chocolate Companies only have a slight affect in terms of comparison to the chocolate ratings. 
+
+Our second analysis will be to determine if the years/date of the chocolate have any affect on rating. Our plan is to first extract the top 5 characteristics, from the Characteristic1 variable, that have the most amount of entries in the data set. Then we will extract the rating data of these 5 characteristics from the data set. After that, we will create a bar graph and print the average ratings for each characteristic. 
+
+```{r}
+dates <- table(choco$Date)
+str(dates)
+dates5 <- head(sort(dates,decreasing=TRUE),n=5)
+names(dates5)
+barplot(dates5)
+```
+
+```{r}
+five <- choco[choco$Date == '2015',]
+four <- choco[choco$Date == '2014',]
+eight <- choco[choco$Date == '2018',]
+six <- choco[choco$Date == '2016',]
+nine <- choco[choco$Date == '2019',]
+fiverating <- five$Rating
+fourrating <- four$Rating
+eightrating <- eight$Rating
+sixrating <- six$Rating
+ninerating <- nine$Rating
+fiveave <- mean(fiverating)
+fourave <- mean(fourrating)
+eightave <- mean(eightrating)
+sixave <- mean(sixrating)
+nineave <- mean(ninerating)
+averating2 <- c(fiveave, fourave, eightave, sixave, nineave)
+names(averating2) <- c('2015','2014','2018','2016','2019')
+barplot(averating2)
+averating2
+```
+
+The top 5 years shown in the graphical bar plot include 2015, 2014, 2018, 2016 and 2019. We can also see from the bar plot that 2015 was the year with the most entries from the data  set. Continuing on with the analysis, we can see from the second bar plot and numerical list that the average ratings for the top 5 years are very similar meaning that the years/date do not have an affect on the chocolate ratings. 
